@@ -3,8 +3,7 @@
   "verison": "0.1.0",
   "private": true,
   "scripts": {
-    "clean": "rimraf dist",
-    "build": "pnpm run clean && tsup",
+    "build": "tsup",
     "dev": "tsup --watch"
   },
   "volta": {
@@ -14,7 +13,6 @@
   "devDependencies": {
     "@types/node": "^22.4.0",
     "@types/semver": "^7.5.8",
-    "rimraf": "^6.0.1",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
   },
