@@ -1,6 +1,6 @@
 {
   "name": "setup-moonup",
-  "verison": "0.1.0",
+  "verison": "1.0.0",
   "private": true,
   "scripts": {
     "build": "tsup",
