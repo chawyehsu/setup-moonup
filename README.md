@@ -10,11 +10,11 @@
 ```yaml
 # Typical usage
 # by default, pinned version or the latest version of MoonBit will be installed
-- uses: chawyehsu/setup-moonup@v0.1.0
+- uses: chawyehsu/setup-moonup@v0.2.0
 - run: moon version --all
 
 # or specify a version of MoonBit
-- uses: chawyehsu/setup-moonup@v0.1.0
+- uses: chawyehsu/setup-moonup@v0.2.0
   with:
     moonbit-version: latest # optional
   run: moonup -V
