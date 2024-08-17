@@ -26,7 +26,7 @@ async function getLatestMoonup(): Promise<string> {
     }
 
     const version = tag.replace(/^v/, '')
-    core.debug(`Latest moonup version is ${version}`)
+    core.info(`Latest moonup version is ${version}`)
     return version
   } catch (error: unknown) {
     throw error
