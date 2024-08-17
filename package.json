@@ -1,0 +1,28 @@
+{
+  "name": "setup-moonup",
+  "verison": "0.1.0",
+  "private": true,
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "pnpm run clean && tsup",
+    "dev": "tsup --watch"
+  },
+  "volta": {
+    "node": "20.16.0",
+    "pnpm": "9.7.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.4.0",
+    "@types/semver": "^7.5.8",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@actions/exec": "^1.1.1",
+    "@actions/http-client": "^2.2.2",
+    "@actions/tool-cache": "^2.0.1",
+    "semver": "^7.6.3"
+  }
+}

@@ -1,0 +1,14 @@
+name: Setup Moonup
+description: Download, install and setup Moonup and MoonBit to the PATH.
+author: chawyehsu
+branding:
+  icon: moon
+  color: purple
+inputs:
+  moonbit-version:
+    description: 'The version of MoonBit to install. (e.g. "latest", "0.1.20240730+95b619bc2")'
+    required: false
+
+runs:
+  using: node20
+  main: dist/main.js
