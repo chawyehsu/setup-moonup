@@ -17,6 +17,7 @@
 - uses: chawyehsu/setup-moonup@v0.1.0
   with:
     moonbit-version: latest # optional
+  run: moonup -V
 ```
 
 ## Development
