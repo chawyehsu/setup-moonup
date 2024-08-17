@@ -25,7 +25,7 @@ Prerequisites: Volta, Nodejs, Pnpm
 
 ```sh
 git clone https://github.com/chawyehsu/setup-moonup
-cd moonsetup-moonupup
+cd setup-moonup
 pnpm dev
 ```
 
