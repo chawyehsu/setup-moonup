@@ -9,9 +9,14 @@
 
 ```yaml
 # Typical usage
-# by default, pinned version or the latest version of MoonBit will be installed
+# by default, the latest moonup release is installed, then moonbit latest
 - uses: chawyehsu/setup-moonup@v1
 - run: moon version --all
+
+# pin moonup version (accepts 1.2.3 or v1.2.3)
+- uses: chawyehsu/setup-moonup@v1
+  with:
+    version: 1.2.3
 
 # or specify a version of MoonBit
 - uses: chawyehsu/setup-moonup@v1
@@ -19,6 +24,9 @@
     moonbit-version: latest # optional
   run: moonup -V
 ```
+
+When `version` is omitted, the action resolves and installs the latest moonup release from GitHub.
+To smoke test pinning, run a workflow with `with: { version: <known-release> }` and then execute `moonup -V`.
 
 ## Development
 
