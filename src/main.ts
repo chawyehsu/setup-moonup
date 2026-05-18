@@ -90,10 +90,12 @@ async function run() {
   try {
     const moonupHome = path.join(os.homedir(), '.moonup')
     const pinnedVersion = getPinnedMoonupVersion()
-    const moonupVersion = pinnedVersion || await getLatestMoonup()
+    let moonupVersion: string
     if (pinnedVersion) {
+      moonupVersion = pinnedVersion
       core.info(`Using pinned moonup version ${moonupVersion}`)
     } else {
+      moonupVersion = await getLatestMoonup()
       core.info(`Using latest moonup version ${moonupVersion}`)
     }
 
