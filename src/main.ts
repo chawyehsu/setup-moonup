@@ -76,7 +76,7 @@ function getPinnedMoonupVersion(): string | undefined {
   const cleanedVersion = semver.clean(normalizedVersion)
   if (!cleanedVersion) {
     core.warning(
-      `Pinned moonup version "${pinnedVersion}" does not look like semver, trying to use it as-is.`,
+      `Pinned moonup version "${pinnedVersion}" does not look like semver, trying to use it as a release tag.`,
     )
     return normalizedVersion
   }
