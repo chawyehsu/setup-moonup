@@ -81,7 +81,7 @@ function getPinnedMoonupVersion(): string | undefined {
     return normalizedVersion
   }
 
-  return cleanedVersion.replace(/^v/, '')
+  return cleanedVersion
 }
 
 async function run() {
@@ -105,7 +105,7 @@ async function run() {
       const moonupUrl = buildMoonupDownloadUrl(moonupVersion)
       core.info(`Downloading moonup from ${moonupUrl}`)
 
-      let archive = ''
+      let archive: string
       try {
         archive = await tc.downloadTool(moonupUrl)
       } catch (error: unknown) {
