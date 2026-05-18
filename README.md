@@ -16,7 +16,7 @@
 # pin moonup version (accepts 1.2.3 or v1.2.3)
 - uses: chawyehsu/setup-moonup@v1
   with:
-    version: 1.2.3
+    version: 0.5.0
 
 # or specify a version of MoonBit
 - uses: chawyehsu/setup-moonup@v1
@@ -26,7 +26,7 @@
 ```
 
 When `version` is omitted, the action resolves and installs the latest moonup release from GitHub.
-To smoke test pinning, run a workflow with `with: { version: 1.2.3 }` and then execute `moonup -V`; the output should include `1.2.3`.
+To smoke test pinning, run a workflow with `with: { version: 0.5.0 }` and then execute `moonup -V`; the output should include `0.5.0`.
 
 ## Development
 
