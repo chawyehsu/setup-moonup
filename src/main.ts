@@ -43,7 +43,6 @@ function buildMoonupDownloadUrl(version: string): string {
   let fileName: string
   switch (platform) {
     case 'darwin':
-      // Current releases ship aarch64 macOS artifacts. Use the aarch64 artifact to avoid 404s
       fileName = `moonup-aarch64-apple-darwin.${ext}`
       break
     case 'linux':
