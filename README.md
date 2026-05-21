@@ -26,7 +26,6 @@
 ```
 
 When `version` is omitted, the action resolves and installs the latest moonup release from GitHub.
-To smoke test pinning, add the snippet above to a test workflow, run it in GitHub Actions, and execute `moonup -V`; the output should include `0.5.0`.
 
 ## Development
 
