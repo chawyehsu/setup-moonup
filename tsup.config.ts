@@ -15,8 +15,7 @@ export default defineConfig({
   noExternal: [
     '@actions/core',
     '@actions/exec',
-    '@actions/http-client',
+    "@actions/github",
     '@actions/tool-cache',
-    'semver',
   ]
 })

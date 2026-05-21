@@ -8,6 +8,10 @@ inputs:
   moonbit-version:
     description: 'The version of MoonBit to install. (e.g. "latest", "0.1.20240730+95b619bc2")'
     required: false
+  token:
+    description: 'GitHub token for API requests. Defaults to github.token.'
+    required: false
+    default: ${{ github.token }}
 
 runs:
   using: node20
