@@ -1,31 +1,26 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
-import * as hc from '@actions/http-client'
+import * as github from '@actions/github'
 import * as tc from '@actions/tool-cache'
 import * as os from 'node:os'
 import path from 'node:path'
-import * as semver from 'semver'
 
 async function getLatestMoonup(): Promise<string> {
   core.startGroup('Determine the latest moonup version')
-  const url = 'https://api.github.com/repos/chawyehsu/moonup/releases/latest'
-  const client = new hc.HttpClient('chawyehsu/setup-moonup', [], {
-    allowRetries: true,
-    maxRetries: 3,
-  })
+  const token = core.getInput('token')
+  const octokit = github.getOctokit(token)
 
   try {
-    const response = await client.getJson<{ name: string }>(url)
-    if (!response.result) {
-      throw new Error(`chawyehsu/setup-moonup: Could not download latest release from ${url}`)
+    const { data } = await octokit.rest.repos.getLatestRelease({
+      owner: 'chawyehsu',
+      repo: 'moonup',
+    })
+
+    const version = data.tag_name.replace(/^v/, '')
+    if (!version) {
+      throw new Error(`chawyehsu/setup-moonup: Could not parse version from ${data.tag_name}`)
     }
 
-    const tag = semver.clean(response.result.name)
-    if (!tag) {
-      throw new Error(`chawyehsu/setup-moonup: Could not parse version from ${response.result.name}`)
-    }
-
-    const version = tag.replace(/^v/, '')
     core.info(`Latest moonup version is ${version}`)
     return version
   } catch (error: unknown) {
@@ -75,15 +70,13 @@ function getPinnedMoonupVersion(): string | undefined {
   }
 
   const normalizedVersion = pinnedVersion.replace(/^v/, '')
-  const cleanedVersion = semver.clean(normalizedVersion)
-  if (!cleanedVersion) {
+  if (!/^\d+\.\d+\.\d+/.test(normalizedVersion)) {
     core.warning(
       `Pinned moonup version "${pinnedVersion}" does not look like semver, trying to use it as a release tag.`,
     )
-    return normalizedVersion
   }
 
-  return cleanedVersion
+  return normalizedVersion
 }
 
 async function run() {
