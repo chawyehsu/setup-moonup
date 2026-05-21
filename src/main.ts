@@ -63,12 +63,36 @@ function getMoonBitVersion(): string | undefined {
   return version
 }
 
+function getPinnedMoonupVersion(): string | undefined {
+  const pinnedVersion = core.getInput('version').trim()
+  if (pinnedVersion === '') {
+    return undefined
+  }
+
+  const normalizedVersion = pinnedVersion.replace(/^v/, '')
+  if (!/^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?$/.test(normalizedVersion)) {
+    core.warning(
+      `Pinned moonup version "${pinnedVersion}" does not look like semver, trying to use it as a release tag.`,
+    )
+  }
+
+  return normalizedVersion
+}
+
 async function run() {
   // Setup moonup
   core.startGroup('Download and install moonup')
   try {
     const moonupHome = path.join(os.homedir(), '.moonup')
-    const moonupVersion = await getLatestMoonup()
+    const pinnedVersion = getPinnedMoonupVersion()
+    let moonupVersion: string
+    if (pinnedVersion) {
+      moonupVersion = pinnedVersion
+      core.info(`Using pinned moonup version ${moonupVersion}`)
+    } else {
+      moonupVersion = await getLatestMoonup()
+      core.info(`Using latest moonup version ${moonupVersion}`)
+    }
 
     // Check if moonup is cached
     let moonupBinPath = tc.find('moonup', moonupVersion)
@@ -78,7 +102,16 @@ async function run() {
       const moonupUrl = buildMoonupDownloadUrl(moonupVersion)
       core.info(`Downloading moonup from ${moonupUrl}`)
 
-      const archive = await tc.downloadTool(moonupUrl)
+      let archive: string
+      try {
+        archive = await tc.downloadTool(moonupUrl)
+      } catch (error: unknown) {
+        if (pinnedVersion) {
+          const message = error instanceof Error ? error.message : String(error)
+          throw new Error(`Failed to download moonup version ${pinnedVersion}: ${message}`)
+        }
+        throw error
+      }
       moonupBinPath = path.join(moonupHome, 'bin')
 
       os.platform() === 'win32'

@@ -5,6 +5,10 @@ branding:
   icon: moon
   color: purple
 inputs:
+  version:
+    description: 'Optional. Pin a specific moonup version (e.g. 1.2.3 or v1.2.3). If omitted, the action installs the default/latest version from the moonup releases API.'
+    required: false
+    default: ''
   moonbit-version:
     description: 'The version of MoonBit to install. (e.g. "latest", "0.1.20240730+95b619bc2")'
     required: false
