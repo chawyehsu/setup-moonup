@@ -13,6 +13,10 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         moonbit-version: ['latest', 'nightly']
+        moonup-version: ['', '0.5.0']
+        exclude:
+          - moonup-version: '0.5.0'
+            moonbit-version: 'nightly'
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -21,6 +25,7 @@ jobs:
       - name: Setup Moonup
         uses: ./
         with:
+          version: ${{ matrix.moonup-version }}
           moonbit-version: ${{ matrix.moonbit-version }}
 
       - name: Verify installation
