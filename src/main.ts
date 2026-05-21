@@ -70,7 +70,7 @@ function getPinnedMoonupVersion(): string | undefined {
   }
 
   const normalizedVersion = pinnedVersion.replace(/^v/, '')
-  if (!/^\d+\.\d+\.\d+/.test(normalizedVersion)) {
+  if (!/^\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?(\+[a-zA-Z0-9.]+)?$/.test(normalizedVersion)) {
     core.warning(
       `Pinned moonup version "${pinnedVersion}" does not look like semver, trying to use it as a release tag.`,
     )
