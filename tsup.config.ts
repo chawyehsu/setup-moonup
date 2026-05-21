@@ -9,7 +9,7 @@ export default defineConfig({
   sourcemap: false,
   dts: false,
   clean: true,
-  minify: true,
+  minify: false,
   platform: 'node',
   // bundle all dependencies
   noExternal: [
