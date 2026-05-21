@@ -40,13 +40,16 @@ function buildMoonupDownloadUrl(version: string): string {
   const arch = os.arch()
   const ext = platform === 'win32' ? 'zip' : 'tar.gz'
 
-  let fileName = undefined
+  let fileName: string
   switch (platform) {
     case 'darwin':
-      fileName = `moonup-${ arch === 'arm64' ? 'aarch64' : 'x86_64' }-apple-darwin.${ext}`
+      // Current releases ship aarch64 macOS artifacts. Use the aarch64 artifact to avoid 404s
+      fileName = `moonup-aarch64-apple-darwin.${ext}`
       break
     case 'linux':
-      fileName = `moonup-x86_64-unknown-linux-gnu.${ext}`
+      fileName = arch === 'arm64'
+        ? `moonup-aarch64-unknown-linux-gnu.${ext}`
+        : `moonup-x86_64-unknown-linux-gnu.${ext}`
       break
     case 'win32':
       fileName = `moonup-x86_64-pc-windows-msvc.${ext}`
