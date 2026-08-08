@@ -3,6 +3,7 @@ import { defineConfig } from 'tsup'
 export default defineConfig({
   entry: {
     main: 'src/main.ts',
+    post: 'src/post.ts',
   },
   target: 'es2020',
   format: 'cjs',

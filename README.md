@@ -23,9 +23,17 @@
   with:
     moonbit-version: latest # optional
   run: moonup -V
+
+# authenticate MoonBit package operations with mooncakes.io
+- uses: chawyehsu/setup-moonup@v2
+  with:
+    mooncakes-username: ${{ secrets.MOONCAKES_USERNAME }}
+    mooncakes-token: ${{ secrets.MOONCAKES_TOKEN }}
 ```
 
 When `version` is omitted, the action resolves and installs the latest moonup release from GitHub.
+
+Provide `mooncakes-username` and `mooncakes-token` together to temporarily configure Mooncakes credentials for the job. The action restores existing credentials, or removes the credentials it created, in its post-step.
 
 ## Development
 

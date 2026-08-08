@@ -16,7 +16,14 @@ inputs:
     description: 'GitHub token for API requests. Defaults to github.token.'
     required: false
     default: ${{ github.token }}
+  mooncakes-username:
+    description: 'Optional Mooncakes username. Must be provided with mooncakes-token.'
+    required: false
+  mooncakes-token:
+    description: 'Optional Mooncakes token. Must be provided with mooncakes-username.'
+    required: false
 
 runs:
   using: node24
   main: dist/main.js
+  post: dist/post.js
