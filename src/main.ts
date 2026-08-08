@@ -4,6 +4,77 @@ import * as github from '@actions/github'
 import * as tc from '@actions/tool-cache'
 import * as os from 'node:os'
 import path from 'node:path'
+import { chmod, copyFile, lstat, mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+
+const credentialState = {
+  configured: 'mooncakes-credentials-configured',
+  path: 'mooncakes-credentials-path',
+  backupPath: 'mooncakes-credentials-backup-path',
+  backupDirectory: 'mooncakes-credentials-backup-directory',
+  originalMode: 'mooncakes-credentials-original-mode',
+}
+
+function getMoonHome(): string {
+  return process.env.MOON_HOME || path.join(os.homedir(), '.moon')
+}
+
+function getMooncakesCredentials(): { username: string, token: string } | undefined {
+  const username = core.getInput('mooncakes-username').trim()
+  const token = core.getInput('mooncakes-token').trim()
+
+  if (username === '' && token === '') {
+    return undefined
+  }
+  if (username === '' || token === '') {
+    throw new Error('mooncakes-username and mooncakes-token must be provided together')
+  }
+
+  core.setSecret(token)
+  return { username, token }
+}
+
+async function configureMooncakesCredentials(credentials: { username: string, token: string }) {
+  core.startGroup('Configure Mooncakes credentials')
+  try {
+    const credentialsPath = path.join(getMoonHome(), 'credentials.json')
+    let backupPath = ''
+    let backupDirectory = ''
+    let originalMode = ''
+
+    try {
+      const stats = await lstat(credentialsPath)
+      if (!stats.isFile()) {
+        throw new Error(`Existing Mooncakes credentials path is not a regular file: ${credentialsPath}`)
+      }
+
+      backupDirectory = await mkdtemp(path.join(os.tmpdir(), 'setup-moonup-credentials-'))
+      backupPath = path.join(backupDirectory, 'credentials.json')
+      await copyFile(credentialsPath, backupPath)
+      await chmod(backupPath, 0o600)
+      originalMode = (stats.mode & 0o777).toString(8)
+    } catch (error: unknown) {
+      if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) {
+        throw error
+      }
+    }
+
+    core.saveState(credentialState.configured, 'true')
+    core.saveState(credentialState.path, credentialsPath)
+    core.saveState(credentialState.backupPath, backupPath)
+    core.saveState(credentialState.backupDirectory, backupDirectory)
+    core.saveState(credentialState.originalMode, originalMode)
+
+    await mkdir(path.dirname(credentialsPath), { recursive: true })
+    await writeFile(credentialsPath, `${JSON.stringify(credentials, null, 2)}\n`, { mode: 0o600 })
+    if (os.platform() !== 'win32') {
+      await chmod(credentialsPath, 0o600)
+    }
+
+    core.info('Mooncakes credentials configured for this job')
+  } finally {
+    core.endGroup()
+  }
+}
 
 async function getLatestMoonup(): Promise<string> {
   core.startGroup('Determine the latest moonup version')
@@ -80,6 +151,8 @@ function getPinnedMoonupVersion(): string | undefined {
 }
 
 async function run() {
+  const mooncakesCredentials = getMooncakesCredentials()
+
   // Setup moonup
   core.startGroup('Download and install moonup')
   try {
@@ -139,7 +212,7 @@ async function run() {
     }
     await exec.exec('moonup', args)
 
-    const moonHome = path.join(os.homedir(), '.moon')
+    const moonHome = getMoonHome()
     const moonBinPath = path.join(moonHome, 'bin')
     core.debug(`MoonBit is installed to ${moonHome}`)
     core.addPath(moonBinPath)
@@ -147,6 +220,10 @@ async function run() {
     throw error
   } finally {
     core.endGroup()
+  }
+
+  if (mooncakesCredentials) {
+    await configureMooncakesCredentials(mooncakesCredentials)
   }
 }
 

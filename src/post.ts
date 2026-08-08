@@ -1,0 +1,47 @@
+import * as core from '@actions/core'
+import * as os from 'node:os'
+import { chmod, rm, rename } from 'node:fs/promises'
+
+const credentialState = {
+  configured: 'mooncakes-credentials-configured',
+  path: 'mooncakes-credentials-path',
+  backupPath: 'mooncakes-credentials-backup-path',
+  backupDirectory: 'mooncakes-credentials-backup-directory',
+  originalMode: 'mooncakes-credentials-original-mode',
+}
+
+async function cleanupMooncakesCredentials() {
+  if (core.getState(credentialState.configured) !== 'true') {
+    return
+  }
+
+  const credentialsPath = core.getState(credentialState.path)
+  const backupPath = core.getState(credentialState.backupPath)
+  const backupDirectory = core.getState(credentialState.backupDirectory)
+  const originalMode = core.getState(credentialState.originalMode)
+
+  if (credentialsPath === '') {
+    throw new Error('Missing Mooncakes credentials path for post-step cleanup')
+  }
+
+  core.startGroup('Clean up Mooncakes credentials')
+  try {
+    await rm(credentialsPath, { force: true })
+    if (backupPath !== '') {
+      await rename(backupPath, credentialsPath)
+      if (os.platform() !== 'win32' && originalMode !== '') {
+        await chmod(credentialsPath, Number.parseInt(originalMode, 8))
+      }
+      core.info('Restored pre-existing Mooncakes credentials')
+    } else {
+      core.info('Removed Mooncakes credentials')
+    }
+  } finally {
+    if (backupDirectory !== '') {
+      await rm(backupDirectory, { recursive: true, force: true })
+    }
+    core.endGroup()
+  }
+}
+
+cleanupMooncakesCredentials()
