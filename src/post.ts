@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as os from 'node:os'
-import { chmod, rm, rename } from 'node:fs/promises'
+import { chmod, rename, rm } from 'node:fs/promises'
 
 const credentialState = {
   configured: 'mooncakes-credentials-configured',
@@ -25,6 +25,7 @@ async function cleanupMooncakesCredentials() {
   }
 
   core.startGroup('Clean up Mooncakes credentials')
+  let restored = false
   try {
     await rm(credentialsPath, { force: true })
     if (backupPath !== '') {
@@ -32,12 +33,13 @@ async function cleanupMooncakesCredentials() {
       if (os.platform() !== 'win32' && originalMode !== '') {
         await chmod(credentialsPath, Number.parseInt(originalMode, 8))
       }
+      restored = true
       core.info('Restored pre-existing Mooncakes credentials')
     } else {
       core.info('Removed Mooncakes credentials')
     }
   } finally {
-    if (backupDirectory !== '') {
+    if (backupDirectory !== '' && (backupPath === '' || restored)) {
       await rm(backupDirectory, { recursive: true, force: true })
     }
     core.endGroup()

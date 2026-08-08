@@ -47,7 +47,7 @@ async function configureMooncakesCredentials(credentials: { username: string, to
         throw new Error(`Existing Mooncakes credentials path is not a regular file: ${credentialsPath}`)
       }
 
-      backupDirectory = await mkdtemp(path.join(os.tmpdir(), 'setup-moonup-credentials-'))
+      backupDirectory = await mkdtemp(path.join(path.dirname(credentialsPath), '.setup-moonup-credentials-'))
       backupPath = path.join(backupDirectory, 'credentials.json')
       await copyFile(credentialsPath, backupPath)
       await chmod(backupPath, 0o600)
