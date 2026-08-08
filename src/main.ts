@@ -220,4 +220,6 @@ async function run() {
   }
 }
 
-run()
+run().catch((error: unknown) => {
+  core.setFailed(error instanceof Error ? error.message : String(error))
+})

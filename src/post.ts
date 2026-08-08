@@ -39,4 +39,6 @@ async function cleanupMooncakesCredentials() {
   }
 }
 
-cleanupMooncakesCredentials()
+cleanupMooncakesCredentials().catch((error: unknown) => {
+  core.setFailed(error instanceof Error ? error.message : String(error))
+})
