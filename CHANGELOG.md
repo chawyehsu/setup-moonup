@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/chawyehsu/setup-moonup/compare/v2.0.0...v2.1.0) (2026-08-08)
+
+
+### Features
+
+* add mooncakes credentials configuration and cleanup ([#9](https://github.com/chawyehsu/setup-moonup/issues/9)) ([fbeaa75](https://github.com/chawyehsu/setup-moonup/commit/fbeaa75bdc367168c7229174161dc7d7097897dd))
+
 ## [2.0.0](https://github.com/chawyehsu/setup-moonup/compare/v1.0.0...v2.0.0) (2026-05-21)
 
 
