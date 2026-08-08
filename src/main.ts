@@ -5,14 +5,7 @@ import * as tc from '@actions/tool-cache'
 import * as os from 'node:os'
 import path from 'node:path'
 import { chmod, copyFile, lstat, mkdir, mkdtemp, writeFile } from 'node:fs/promises'
-
-const credentialState = {
-  configured: 'mooncakes-credentials-configured',
-  path: 'mooncakes-credentials-path',
-  backupPath: 'mooncakes-credentials-backup-path',
-  backupDirectory: 'mooncakes-credentials-backup-directory',
-  originalMode: 'mooncakes-credentials-original-mode',
-}
+import { credentialState } from './state'
 
 function getMoonHome(): string {
   return process.env.MOON_HOME || path.join(os.homedir(), '.moon')

@@ -1,14 +1,7 @@
 import * as core from '@actions/core'
 import * as os from 'node:os'
 import { chmod, rename, rm } from 'node:fs/promises'
-
-const credentialState = {
-  configured: 'mooncakes-credentials-configured',
-  path: 'mooncakes-credentials-path',
-  backupPath: 'mooncakes-credentials-backup-path',
-  backupDirectory: 'mooncakes-credentials-backup-directory',
-  originalMode: 'mooncakes-credentials-original-mode',
-}
+import { credentialState } from './state'
 
 async function cleanupMooncakesCredentials() {
   if (core.getState(credentialState.configured) !== 'true') {
