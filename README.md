@@ -17,18 +17,20 @@
 - uses: chawyehsu/setup-moonup@v2
   with:
     version: 0.5.0
+- run: moonup -V
 
-# or specify a version of MoonBit
+# pin a version of MoonBit, or you may use `moonup pin <version>` in a project in advance
 - uses: chawyehsu/setup-moonup@v2
   with:
     moonbit-version: latest # optional
-  run: moonup -V
+- run: moonc version
 
 # authenticate MoonBit package operations with mooncakes.io
 - uses: chawyehsu/setup-moonup@v2
   with:
     mooncakes-username: ${{ secrets.MOONCAKES_USERNAME }}
     mooncakes-token: ${{ secrets.MOONCAKES_TOKEN }}
+- run: moon whoami
 ```
 
 When `version` is omitted, the action resolves and installs the latest moonup release from GitHub.
